@@ -28,13 +28,9 @@ else:
 
 #REQUESTING DATA
 load_dotenv()
-
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}"
-
 response = requests.get(request_url)  
-
 parsed_response = json.loads(response.text)
 
 #####Need to add backup in case of failure (e.g. ticker passes initial validation but doesn't actually represent a real stock)
@@ -42,17 +38,13 @@ parsed_response = json.loads(response.text)
 
 ##INFORMATION
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
-
 tsd = parsed_response["Time Series (Daily)"]
 dates = list(tsd.keys()) #assumes first day is on top, may want to sort to be sure
-
 latest_day = dates[0]
-
 latest_close = tsd[latest_day]["4. close"]
 
 high_prices = []
 low_prices = []
-
 for date in dates:
     high_price = tsd[date]["2. high"]
     high_prices.append(float(high_price))
@@ -72,9 +64,7 @@ else:
 
 ##CSV FILE:
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
-
 csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
-
 with open(csv_file_path, "w") as csv_file:
     writer = csv.DictWriter(csv_file, fieldnames=csv_headers)
     writer.writeheader()
@@ -89,20 +79,18 @@ with open(csv_file_path, "w") as csv_file:
             "volume": daily_price["5. volume"]
         })
 
+##GRAPH
 csv = pandas.read_csv(csv_file_path)
 res = seaborn.lineplot(x="timestamp", y="close", data=csv)
 
 #csv["timestamp"] = pandas.to_datetime(csv["timestamp"], format = "%y-%m-%d")
 #The chart will work without this, but the dates will be illegible. Figure out how to format.
+
 plt.title(f"Historical Pricing Data for {ticker}")
 plt.xlabel("Date")
 plt.ylabel("Closing Price")
 res.yaxis.set_major_formatter('${x:1.2f}')
 plt.show()
-
-##Add formatting here
-
-
 
 ##UI
 print("-------------------------")
