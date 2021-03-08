@@ -16,7 +16,8 @@ dt_string = now.strftime("%m/%d/%Y at %H:%M")
 
 ##USER INPUT FOR TICKER
 
-
+symbol = input("Please enter the stock symbol you're researching:")
+ticker = symbol.upper()
 #Need to do data validation here (make sure symbol is 1-5 letters [not numbers or special characters])
 ###if incorrect, display friendly error message like "Please check make sure your stock symbol is correct, for example, "MSFT" for Microsoft."
 
@@ -26,7 +27,7 @@ load_dotenv()
 
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 
-ticker = "IBM" #> will need to prompt user input here
+#ticker = "IBM" #> will need to prompt user input here
 
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}"
 
@@ -58,17 +59,13 @@ for date in dates:
 recent_high = max(high_prices)
 recent_low = min(low_prices)
 
-##Dictionary keys are "Meta Data" and "Time Series (Daily)"
-#####Keys within "Meta Data" are dict_keys(['1. Information', '2. Symbol', '3. Last Refreshed', '4. Interval', '5. Output Size', '6. Time Zone'])
-#####Keys within "Time Series (Daily)" are {'1. open', '2. high', '3. low', '4. close', '5. volume'}
-
 ##RECOMMENDATION
 if float(latest_close) <= (1.2 * float(recent_low)):
-    rec = "Buy!"
-    rec_reason = "This stock may be undervalued."
+    rec = "BUY!"
+    rec_reason = "This stock may be undervalued as its price is less than 20 percent above its recent low."
 else:
-    rec = "Avoid!"
-    rec_reason = "This stock may be too risky."
+    rec = "HOLD OFF!"
+    rec_reason = "This stock may be risky - its current price is greater than 20 percent above its recent low and it could be volatile."
 
 
 ##CSV FILE:
@@ -92,7 +89,7 @@ with open(csv_file_path, "w") as csv_file:
 
 ##UI
 print("-------------------------")
-print("SELECTED SYMBOL: IBM")
+print(f"SELECTED SYMBOL: {ticker}")
 print("-------------------------")
 print("REQUESTING STOCK MARKET DATA...")
 print(f"REQUEST AT: {dt_string}")
@@ -105,7 +102,7 @@ print("-------------------------")
 print(f"RECOMMENDATION: {rec}")
 print(f"RECOMMENDATION REASON: {rec_reason}")
 print("-------------------------")
-print(f"CREATING CSV: {csv_file_path}...")
+print(f"CREATING CSV at {csv_file_path}")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")

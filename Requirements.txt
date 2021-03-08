@@ -1,3 +1,4 @@
 requests
 python-dotenv
-pandas
+
+#Seaborn can be used for data viz, see Kat Huang's comment on slack for line plotting
