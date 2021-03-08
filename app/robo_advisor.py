@@ -92,6 +92,7 @@ plt.ylabel("Closing Price")
 res.yaxis.set_major_formatter('${x:1.2f}')
 plt.show()
 
+
 ##UI
 print("-------------------------")
 print(f"SELECTED SYMBOL: {ticker}")
