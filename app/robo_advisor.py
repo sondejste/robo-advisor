@@ -42,7 +42,6 @@ except:
     print("Oops! Looks like that symbol wasn't correct. Please try again.")
     exit()
 
-
 tsd = parsed_response["Time Series (Daily)"]
 dates = list(tsd.keys()) #assumes first day is on top, may want to sort to be sure
 latest_day = dates[0]
@@ -86,14 +85,9 @@ with open(csv_file_path, "w") as csv_file:
 
 
 ##GRAPH
-#####NEED TO FIX DATES, OTHERWISE DONE
 csv = pandas.read_csv(csv_file_path)
 res = seaborn.lineplot(x="timestamp", y="close", data=csv)
-
-res.xaxis.set_major_locator(md.WeekdayLocator(byweekday = 1))
-res.xaxis.set_major_formatter(md.DateFormatter("%Y-%m-%d"))
 plt.setp(res.xaxis.get_majorticklabels(), rotation = 60)
-
 plt.title(f"Historical Pricing Data for {ticker}")
 plt.xlabel("Date")
 plt.ylabel("Closing Price")
