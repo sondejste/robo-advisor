@@ -5,6 +5,7 @@ import json
 import os
 import csv
 from datetime import datetime
+from dotenv import load_dotenv
 
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
@@ -19,14 +20,22 @@ dt_string = now.strftime("%m/%d/%Y at %H:%M")
 #Need to do data validation here (make sure symbol is 1-5 letters [not numbers or special characters])
 ###if incorrect, display friendly error message like "Please check make sure your stock symbol is correct, for example, "MSFT" for Microsoft."
 
-#GET Request to Alphavantage API to retrieve data (user has already input API key into .env file)
-#MAKE HTTP Request for trading data
 
-request_url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=demo"
+#REQUESTING DATA
+load_dotenv()
+
+api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
+
+ticker = "IBM" #> will need to prompt user input here
+
+request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}"
 
 response = requests.get(request_url)  
 
 parsed_response = json.loads(response.text)
+
+#####Need to add backup in case of failure (e.g. ticker passes initial validation)
+
 
 ##INFORMATION
 last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
