@@ -91,6 +91,13 @@ with open(csv_file_path, "w") as csv_file:
 
 csv = pandas.read_csv(csv_file_path)
 res = seaborn.lineplot(x="timestamp", y="close", data=csv)
+
+#csv["timestamp"] = pandas.to_datetime(csv["timestamp"], format = "%y-%m-%d")
+#The chart will work without this, but the dates will be illegible. Figure out how to format.
+plt.title(f"Historical Pricing Data for {ticker}")
+plt.xlabel("Date")
+plt.ylabel("Closing Price")
+res.yaxis.set_major_formatter('${x:1.2f}')
 plt.show()
 
 ##Add formatting here
@@ -114,7 +121,7 @@ print(f"RECOMMENDATION REASON: {rec_reason}")
 print("-------------------------")
 print(f"CREATING CSV at {csv_file_path}")
 print("-------------------------")
-print("CREATING GRAPHICAL REPRESENTATION...")
+print("GRAPHING RECENT PRICE HISTORY...")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
