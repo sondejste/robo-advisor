@@ -15,9 +15,14 @@ now = datetime.now()
 dt_string = now.strftime("%m/%d/%Y at %H:%M")
 
 ##USER INPUT FOR TICKER
-
 symbol = input("Please enter the stock symbol you're researching:")
-ticker = symbol.upper()
+
+if symbol.isalpha() and len(symbol) <= 5:
+    ticker = symbol.upper()
+else:
+    print("Please make sure you entered your stock symbol correctly! For example, 'MSFT' for Miscrosoft.")
+    exit()
+
 #Need to do data validation here (make sure symbol is 1-5 letters [not numbers or special characters])
 ###if incorrect, display friendly error message like "Please check make sure your stock symbol is correct, for example, "MSFT" for Microsoft."
 
@@ -26,8 +31,6 @@ ticker = symbol.upper()
 load_dotenv()
 
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
-
-#ticker = "IBM" #> will need to prompt user input here
 
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}"
 
