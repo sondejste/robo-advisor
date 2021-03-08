@@ -38,17 +38,14 @@ latest_close = tsd[latest_day]["4. close"]
 
 
 high_prices = []
+low_prices = []
 
 for date in dates:
     high_price = tsd[date]["2. high"]
     high_prices.append(float(high_price))
-recent_high = max(high_prices)
-
-low_prices = []
-
-for date in dates:
     low_price = tsd[date]["3. low"]
     low_prices.append(float(low_price))
+recent_high = max(high_prices)
 recent_low = min(low_prices)
 
 #breakpoint()
@@ -59,6 +56,12 @@ recent_low = min(low_prices)
 
 ##RECOMMENDATION
 
+if float(latest_close) <= (1.2 * float(recent_low)):
+    rec = "Buy!"
+    rec_reason = "This stock may be undervalued."
+else:
+    rec = "Avoid!"
+    rec_reason = "This stock may be too risky."
 
 
 ##UI
@@ -73,12 +76,12 @@ print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
 print(f"RECENT HIGH: {to_usd(float(recent_high))}")
 print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
-print("RECOMMENDATION: BUY!")
+print(f"RECOMMENDATION: {rec}")
     ##will need to use IF statements here
-print("RECOMMENDATION REASON: TODO")
+print(f"RECOMMENDATION REASON: {rec_reason}")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
 
-#NEED TO ALSO WRITE FOLLOWING INFO ONTO A CSV FILE AS WELL:
+#NEED TO ALSO WRITE INFO ONTO A CSV FILE AS WELL:
 #
