@@ -32,7 +32,7 @@ pip install -r requirements.txt
 
 ## Setup
 
-Obtain your API Key from [Alphavantage](https://www.alphavantage.co/) and follow input directions below.
+Obtain your API Key from [Alpha Vantage](https://www.alphavantage.co/) and follow input directions below.
 
 In in the root directory of your local repository, create a new file called ".env", and update the contents of the ".env" file to specify your API Key:
 
