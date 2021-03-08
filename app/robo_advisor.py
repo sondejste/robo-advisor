@@ -28,11 +28,15 @@ last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
 
 latest_close = parsed_response["Time Series (Daily)"][f"{last_refreshed}"]["4. close"]
 
+recent_high = parsed_response["Time Series (Daily)"][f"{last_refreshed}"]["2. high"]
+
+recent_low = parsed_response["Time Series (Daily)"][f"{last_refreshed}"]["3. low"]
+
 #breakpoint()
 
 ##Dictionary keys are "Meta Data" and "Time Series (Daily)"
 #####Keys within "Meta Data" are dict_keys(['1. Information', '2. Symbol', '3. Last Refreshed', '4. Interval', '5. Output Size', '6. Time Zone'])
-
+#####Keys within "Time Series (Daily)" are {'1. open', '2. high', '3. low', '4. close', '5. volume'}
 ##RECOMMENDATION
 
 
@@ -46,8 +50,8 @@ print(f"REQUEST AT: {dt_string}")
 print("-------------------------")
 print(f"LATEST DAY: {last_refreshed}")
 print(f"LATEST CLOSE: {to_usd(float(latest_close))}")
-print("RECENT HIGH: $101,000.00")
-print("RECENT LOW: $99,000.00")
+print(f"RECENT HIGH: {to_usd(float(recent_high))}")
+print(f"RECENT LOW: {to_usd(float(recent_low))}")
 print("-------------------------")
 print("RECOMMENDATION: BUY!")
     ##will need to use IF statements here
