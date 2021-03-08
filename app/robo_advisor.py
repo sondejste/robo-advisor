@@ -6,6 +6,9 @@ import os
 import csv
 from datetime import datetime
 from dotenv import load_dotenv
+import seaborn
+import pandas
+import matplotlib.pyplot as plt
 
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
@@ -23,10 +26,6 @@ else:
     print("Please make sure you entered your stock symbol correctly! For example, 'MSFT' for Miscrosoft.")
     exit()
 
-#Need to do data validation here (make sure symbol is 1-5 letters [not numbers or special characters])
-###if incorrect, display friendly error message like "Please check make sure your stock symbol is correct, for example, "MSFT" for Microsoft."
-
-
 #REQUESTING DATA
 load_dotenv()
 
@@ -38,7 +37,7 @@ response = requests.get(request_url)
 
 parsed_response = json.loads(response.text)
 
-#####Need to add backup in case of failure (e.g. ticker passes initial validation)
+#####Need to add backup in case of failure (e.g. ticker passes initial validation but doesn't actually represent a real stock)
 
 
 ##INFORMATION
@@ -90,6 +89,14 @@ with open(csv_file_path, "w") as csv_file:
             "volume": daily_price["5. volume"]
         })
 
+csv = pandas.read_csv(csv_file_path)
+res = seaborn.lineplot(x="timestamp", y="close", data=csv)
+plt.show()
+
+##Add formatting here
+
+
+
 ##UI
 print("-------------------------")
 print(f"SELECTED SYMBOL: {ticker}")
@@ -106,6 +113,8 @@ print(f"RECOMMENDATION: {rec}")
 print(f"RECOMMENDATION REASON: {rec_reason}")
 print("-------------------------")
 print(f"CREATING CSV at {csv_file_path}")
+print("-------------------------")
+print("CREATING GRAPHICAL REPRESENTATION...")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
