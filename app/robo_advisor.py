@@ -63,16 +63,23 @@ else:
 
 
 ##CSV FILE:
-
 csv_file_path = os.path.join(os.path.dirname(__file__), "..", "data", "prices.csv")
 
-with open(csv_file_path, "w") as csv_file:
-    writer = csv.DictWriter(csv_file, fieldnames=["city, name"])
-    writer.writeheader()
-    writer.writerow({})
-    writer.writerow({})
-    writer.writerow({})
+csv_headers = ["timestamp", "open", "high", "low", "close", "volume"]
 
+with open(csv_file_path, "w") as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=csv_headers)
+    writer.writeheader()
+    for date in dates:
+        daily_price = tsd[date]
+        writer.writerow({
+            "timestamp": date,
+            "open": daily_price["1. open"],
+            "high": daily_price["2. high"],
+            "low": daily_price["3. low"],
+            "close": daily_price["4. close"],
+            "volume": daily_price["5. volume"]
+        })
 
 ##UI
 print("-------------------------")
