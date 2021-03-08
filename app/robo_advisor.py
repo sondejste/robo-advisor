@@ -9,6 +9,8 @@ from dotenv import load_dotenv
 import seaborn
 import pandas
 import matplotlib.pyplot as plt
+import matplotlib.dates as md
+
 
 def to_usd(my_price):
     return "${0:,.2f}".format(my_price)
@@ -30,14 +32,17 @@ else:
 load_dotenv()
 api_key = os.environ.get("ALPHAVANTAGE_API_KEY")
 request_url = f"https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol={ticker}&apikey={api_key}"
-response = requests.get(request_url)  
-parsed_response = json.loads(response.text)
-
-#####Need to add backup in case of failure (e.g. ticker passes initial validation but doesn't actually represent a real stock)
 
 
-##INFORMATION
-last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+try:
+    response = requests.get(request_url)
+    parsed_response = json.loads(response.text)
+    last_refreshed = parsed_response["Meta Data"]["3. Last Refreshed"]
+except:
+    print("Oops! Looks like that symbol wasn't correct. Please try again.")
+    exit()
+
+
 tsd = parsed_response["Time Series (Daily)"]
 dates = list(tsd.keys()) #assumes first day is on top, may want to sort to be sure
 latest_day = dates[0]
@@ -79,12 +84,15 @@ with open(csv_file_path, "w") as csv_file:
             "volume": daily_price["5. volume"]
         })
 
+
 ##GRAPH
+#####NEED TO FIX DATES, OTHERWISE DONE
 csv = pandas.read_csv(csv_file_path)
 res = seaborn.lineplot(x="timestamp", y="close", data=csv)
 
-#csv["timestamp"] = pandas.to_datetime(csv["timestamp"], format = "%y-%m-%d")
-#The chart will work without this, but the dates will be illegible. Figure out how to format.
+res.xaxis.set_major_locator(md.WeekdayLocator(byweekday = 1))
+res.xaxis.set_major_formatter(md.DateFormatter("%Y-%m-%d"))
+plt.setp(res.xaxis.get_majorticklabels(), rotation = 60)
 
 plt.title(f"Historical Pricing Data for {ticker}")
 plt.xlabel("Date")
@@ -109,8 +117,6 @@ print(f"RECOMMENDATION: {rec}")
 print(f"RECOMMENDATION REASON: {rec_reason}")
 print("-------------------------")
 print(f"CREATING CSV at {csv_file_path}")
-print("-------------------------")
-print("GRAPHING RECENT PRICE HISTORY...")
 print("-------------------------")
 print("HAPPY INVESTING!")
 print("-------------------------")
